@@ -297,8 +297,12 @@ defmodule Unzip do
   end
 
   defp to_datetime(<<year::7, month::4, day::5>>, <<hour::5, minute::6, second::5>>) do
-    {:ok, datetime} = NaiveDateTime.new(1980 + year, month, day, hour, minute, second * 2)
-    datetime
+    if month > 0 and day > 0 do
+      {:ok, datetime} = NaiveDateTime.new(1980 + year, month, day, hour, minute, second * 2)
+      datetime
+    else
+      NaiveDateTime.utc_now()
+    end
   end
 
   defp pread!(file, offset, length) do
